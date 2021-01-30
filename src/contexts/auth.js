@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useCallback } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,11 +13,11 @@ function AuthProvider({ children }) {
     const [userTotalPrice, setTotalPrice] = useState(0);
     const [cleanUserOrder, setCleanUserOrder] = useState(false);
 
-    function updateUserOrder(data) {
+    const updateUserOrder = useCallback((data) => {
         setUserOrder( data );
-    }
+    }, [userOrder]);
 
-    function updateTotalPrice(data) {
+    const updateTotalPrice = useCallback((data) => {
         let totalPrice = 0;
 
         data.forEach(element => {
@@ -25,7 +25,7 @@ function AuthProvider({ children }) {
         });
 
         setTotalPrice(totalPrice);
-    }
+    }, [userTotalPrice]);
 
     async function signUp(name, address, telephone, email, password) {
         setLoadingAuth(true);
